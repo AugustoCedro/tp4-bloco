@@ -1,4 +1,5 @@
-name: gradleci.yml
+name: gradleci
+
 on:
   push:
     branches: [ "master", "develop" ]
@@ -23,17 +24,14 @@ jobs:
           java-version: '21'
           cache: gradle
 
+      # Permissão do Gradle Wrapper
+      - name: Grant execute permission to gradlew
+        run: chmod +x gradlew
+
       # Build
       - name: Build
         run: ./gradlew build --no-daemon
 
-      # Testes com Cobertura
-      - name: Run Tests
-        run: ./gradlew test jacocoTestReport --no-daemon
-
-      # Relatórios de Teste
-      - name: Upload Test Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: tests-report
-          path: build/reports/tests/
+      # Testes + Jacoco
+      - name: Run Tests with Coverage
+        run: ./grad
