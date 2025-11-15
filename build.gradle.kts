@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // --- TESTES ---
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testImplementation 'net.jqwik:jqwik:1.9.3'
+
+    // --- Javalin ---
+    implementation 'io.javalin:javalin:6.7.0'
+    runtimeOnly 'io.javalin:javalin-rendering:6.7.0'
+
+    // --- Thymeleaf ---
+    implementation 'org.thymeleaf:thymeleaf:3.1.3.RELEASE'
+
+    // --- Logging ---
+    implementation 'org.slf4j:slf4j-simple:2.0.16'
+
+    // --- Selenium ---
+    implementation 'org.seleniumhq.selenium:selenium-java:4.37.0'
+
+    // --- WebDriverManager ---
+    implementation 'io.github.bonigarcia:webdrivermanager:6.3.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+jacocoTestReport {
+    dependsOn test
+            reports {
+                xml.required = true
+                html.required = true
+            }
+}
