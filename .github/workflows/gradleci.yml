@@ -1,47 +1,52 @@
-name: gradleci
+name: CI Pipeline
 
 on:
   push:
-    branches: [ "master", "develop" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "master", "develop" ]
+    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
-  build-test-analyze:
+  build-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Baixando Código do Repositório
         uses: actions/checkout@v4
 
-      - name: Setup Java
+      - name: Configurando Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
-          cache: gradle
+          distribution: temurin
+          java-version: "21"
 
-      - name: Grant execute permission to gradlew
-        run: chmod +x gradlew
+      - name: Cache do Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
-      - name: Build
-        run: ./gradlew assemble --no-daemon
+      - name: Dando permissão ao Gradle
+        run: chmod +x ./gradlew
 
-      - name: Run Tests with Coverage
-        run: ./gradlew test jacocoTestReport --no-daemon || true
+      - name: Build do projeto com Gradle
+        run: ./gradlew build --stacktrace
 
-      - name: Upload Test Reports
+      - name: Rodando tests
+        run: ./gradlew test
+
+      - name: Análise estática com Checkstyle
+        if: always()
+        run: ./gradlew checkstyleMain checkstyleTest
+
+      - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: build/reports/tests/test
-
-      - name: Upload Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: build/reports/jacoco/test/html
-          if-no-files-found: ignore
+          path: build/reports/tests/
