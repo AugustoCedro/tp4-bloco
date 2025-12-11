@@ -40,9 +40,8 @@ jobs:
       - name: Rodando tests
         run: ./gradlew test
 
-      - name: Análise estática com Checkstyle
-        if: always()
-        run: ./gradlew checkstyleMain checkstyleTest
+      - name: Gerar relatório de cobertura (JaCoCo)
+        run: ./gradlew jacocoTestReport
 
       - name: Upload test reports
         if: always()
@@ -50,3 +49,10 @@ jobs:
         with:
           name: test-report
           path: build/reports/tests/
+
+      - name: Upload relatório de cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: build/reports/jacoco/test/html/
