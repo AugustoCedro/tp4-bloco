@@ -7,9 +7,11 @@ import org.example.exception.ClientNotFoundException;
 import org.example.model.Client;
 import org.example.service.ClientService;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.time.Duration;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ClientControllerTest {
 
@@ -93,6 +95,7 @@ public class ClientControllerTest {
         });
     }
 
+
     @Example
     void updateClientWithValidData(@ForAll("validNames") String name,@ForAll("validEmails") String email,@ForAll("mockedClientIds") int id){
         assertDoesNotThrow(() -> {
@@ -108,8 +111,6 @@ public class ClientControllerTest {
         });
 
     }
-
-
 
     @Example
     void deleteExistingClient() {
@@ -128,8 +129,4 @@ public class ClientControllerTest {
             controller.deleteClientById(id);
         });
     }
-
-
-
-
 }
