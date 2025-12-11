@@ -37,6 +37,11 @@ jobs:
       - name: Build do projeto com Gradle
         run: ./gradlew build --stacktrace
 
+      - name: Instalando Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y google-chrome-stable
+
       - name: Rodando tests
         run: ./gradlew test
 
