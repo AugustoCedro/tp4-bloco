@@ -65,8 +65,14 @@ public class ClientViewTest {
         WebElement link = driver.findElement(By.linkText("Editar"));
         link.click();
 
-        driver.findElement(By.name("name")).sendKeys("editedClient");
-        driver.findElement(By.name("email")).sendKeys("editedClient@example.com");
+        WebElement nameInput = driver.findElement(By.name("name"));
+        WebElement emailInput = driver.findElement(By.name("email"));
+
+        nameInput.clear();
+        emailInput.clear();
+
+        nameInput.sendKeys("editedClient");
+        emailInput.sendKeys("editedClient@example.com");
 
         driver.findElement(By.cssSelector("form")).submit();
 
@@ -75,6 +81,7 @@ public class ClientViewTest {
         String pageSource = driver.getPageSource();
         Assertions.assertTrue(pageSource.contains("editedClient"));
     }
+
 
     @Test
     void testDeleteClient() {
